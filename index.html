@@ -5,8 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>ぷらそにかファンサイト</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <script src="TemplateData/UnityProgress.js"></script>
+  <script src="Build/UnityLoader.js"></script>
+  <script>
+    var unityInstance = UnityLoader.instantiate("unityContainer", "Build/MemoryGame_WebGL.json", {onProgress: UnityProgress});
+  </script>
 </head>
 <body>
-  <h1>神経衰弱設置ページ</h1>
+  <div class="webgl-content">
+    <div id="unityContainer" style="width: 1600px; height: 900px"></div>
+    <div class="footer">
+      <div class="webgl-logo"></div>
+      <div class="title">MemoryGame</div>
+    </div>
+  </div>
 </body>
 </html>
