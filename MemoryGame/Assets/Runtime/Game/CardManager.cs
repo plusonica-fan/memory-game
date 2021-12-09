@@ -35,7 +35,7 @@ public class CardManager : MonoBehaviour
     {
         _camera = Camera.main;
         var selectPlaces = FindObjectOfType<SelectPlaces>();
-        selectPlaces.OnGameStart = CreateCard;
+        selectPlaces.onGameStart = CreateCard;
         _timeText = GameObject.Find("TimeText").GetComponent<Text>();
     }
 

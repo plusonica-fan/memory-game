@@ -12,7 +12,7 @@ public class SelectPlaces : MonoBehaviour
 
     private static readonly string[] Places = {"東京", "名古屋", "大阪", "札幌"};
 
-    public Action<List<string>, bool> OnGameStart;
+    public Action<List<string>, bool> onGameStart;
 
     private void Start()
     {
@@ -30,15 +30,21 @@ public class SelectPlaces : MonoBehaviour
 
         //始めるボタン
         var startButton =  GameObject.Find("StartButton").GetComponent<Button>();
-        startButton.onClick.AddListener(() =>
+        startButton.onClick.AddListener(TryStart);
+        
+        async void TryStart()
         {
             startButton.interactable = false;
             var status = GameObject.Find("Bye").transform.GetChild(1).GetComponent<Toggle>();
-            StartGame(toggles, status.isOn);
-        });
+            var result = await StartGame(toggles, status.isOn);
+            if (result == false)
+            {
+                startButton.interactable = true;
+            }
+        }
     }
 
-    private async void StartGame(List<Toggle> toggles, bool status)
+    private async UniTask<bool> StartGame(IReadOnlyList<Toggle> toggles, bool status)
     {
         //どれかがTrueになってないとだめなので
         if (toggles.Any(x => x.isOn))
@@ -64,12 +70,12 @@ public class SelectPlaces : MonoBehaviour
             await UniTask.WaitUntil(() => _isCompleteDownloadDetails);
         
             GameObject.Find("SelectCanvas").SetActive(false);
-            OnGameStart?.Invoke(places, status);
+            onGameStart?.Invoke(places, status);
+            return true;
         }
-        else
-        {
-            Debug.LogError("Failed");
-        }
+        
+        Debug.LogError("Failed");
+        return false;
     }
 
     private static async void GetMemberDetails()
