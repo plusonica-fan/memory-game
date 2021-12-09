@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class CardManager : MonoBehaviour
@@ -20,7 +19,6 @@ public class CardManager : MonoBehaviour
     private float _time;
     private bool _isClearGame;
 
-
     //２枚めくった後に元に戻るアニメーションが完了しているかどうか
     private bool _isCardsToDefault = true;
 
@@ -31,6 +29,7 @@ public class CardManager : MonoBehaviour
     private static readonly Vector2 FieldSpace = new Vector2(9.5f, 4);
     private static readonly int MainTex = Shader.PropertyToID("_MainTex");
     private static Camera _camera;
+    private static int _cardAmount;
 
     private void Start()
     {
@@ -57,8 +56,10 @@ public class CardManager : MonoBehaviour
             //卒業してないメンバーだけを選ぶ
             addMember = addMember.Where(x => x.member.status).ToList();
         }
+
+        _cardAmount = addMember.Count;
         
-        var createCards = new List<MemberIcon>(addMember.Count * 2);
+        var createCards = new List<MemberIcon>(_cardAmount * 2);
         //ペア分必要なので、二回代入する
         createCards.AddRange(addMember);
         createCards.AddRange(addMember);
@@ -161,7 +162,7 @@ public class CardManager : MonoBehaviour
                             if (cards.Count < 1)
                             {
                                 _isClearGame = true;
-                                clear.GameClear((int)_time);
+                                clear.GameClear((int)_time, _cardAmount);
                             }
                         });
                         sequence.Play();

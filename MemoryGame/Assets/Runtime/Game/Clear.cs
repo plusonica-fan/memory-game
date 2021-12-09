@@ -25,7 +25,7 @@ public class Clear : MonoBehaviour
         gameObject.transform.localScale = Vector3.zero;
     }
 
-    public void GameClear(int time)
+    public void GameClear(int time, int cardAmount)
     {
         retryButton.interactable = false;
         tweetButton.interactable = false;
@@ -39,7 +39,7 @@ public class Clear : MonoBehaviour
         tweetButton.onClick.AddListener(() =>
         {
             Debug.Log("tweet");
-            Twitter.Tweet($"ぷらそにか神経衰弱を{CardManager.FormatTime(time)}でクリアしました！",
+            Twitter.Tweet($"ぷらそにか神経衰弱、{cardAmount}人分を{CardManager.FormatTime(time)}でクリアしました！",
                 "https://plusonica-fan.github.io/memory-game/", "ぷらそにかファンサイト,ぷらそにか神経衰弱");
         });
         resultTimeText.text = CardManager.FormatTime(time) + "でクリア！";
