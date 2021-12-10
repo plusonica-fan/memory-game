@@ -43,7 +43,8 @@ public class Clear : MonoBehaviour
             var text = $"ぷらそにか神経衰弱、{cardAmount}人分を{CardManager.FormatTime(time)}でクリアしました！";
             const string link = "https://plusonica-fan.github.io/memory-game/";
             var hashTags = new[] { "ぷらそにかファンサイト", "ぷらそにか神経衰弱" };
-            var hash = string.Join("", hashTags.Select(x => $"%23{x}"));
+            var hash = string.Join("　", hashTags.Select(x => $"%23{x}"));
+            Debug.Log(hash);
             Twitter.Tweet($"{text}%0a{link}%0a{hash}");
         });
         resultTimeText.text = CardManager.FormatTime(time) + "でクリア！";
