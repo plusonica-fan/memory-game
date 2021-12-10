@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -39,8 +40,11 @@ public class Clear : MonoBehaviour
         tweetButton.onClick.AddListener(() =>
         {
             Debug.Log("tweet");
-            Twitter.Tweet($"ぷらそにか神経衰弱、{cardAmount}人分を{CardManager.FormatTime(time)}でクリアしました！",
-                "https://plusonica-fan.github.io/memory-game/", "ぷらそにかファンサイト,ぷらそにか神経衰弱");
+            var text = $"ぷらそにか神経衰弱、{cardAmount}人分を{CardManager.FormatTime(time)}でクリアしました！";
+            const string link = "https://plusonica-fan.github.io/memory-game/";
+            var hashTags = new[] { "ぷらそにかファンサイト", "ぷらそにか神経衰弱" };
+            var hash = string.Join("", hashTags.Select(x => $"#{x}"));
+            Twitter.Tweet($"{text}%0a{link}%0a{hash}");
         });
         resultTimeText.text = CardManager.FormatTime(time) + "でクリア！";
     }

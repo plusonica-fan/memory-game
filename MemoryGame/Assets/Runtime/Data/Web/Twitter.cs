@@ -19,11 +19,9 @@ public static class Twitter
 #endif
 
     // ツイート画面を開く
-    public static void Tweet(string text, string linkUrl, string hashtags)
+    public static void Tweet(string text)
     {
-        var url = "https://twitter.com/intent/tweet?" + "text=" + text + "&url=" + linkUrl + "&hashtags=" + hashtags;
-        var uri = new Uri(url);
         // WebGLの場合は、ゲームプレイ画面と同じウィンドウでツイート画面が開かないよう、処理を変える
-        TweetFromUnity(uri.AbsoluteUri);
+        TweetFromUnity(text);
     }
 }
