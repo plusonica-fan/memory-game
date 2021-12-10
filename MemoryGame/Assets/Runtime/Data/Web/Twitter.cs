@@ -24,6 +24,6 @@ public static class Twitter
         var url = "https://twitter.com/intent/tweet?" + "text=" + text + "&url=" + linkUrl + "&hashtags=" + hashtags;
         var uri = new Uri(url);
         // WebGLの場合は、ゲームプレイ画面と同じウィンドウでツイート画面が開かないよう、処理を変える
-        TweetFromUnity($"window.open('{uri.AbsoluteUri}','_blank')");
+        TweetFromUnity(uri.AbsoluteUri);
     }
 }
