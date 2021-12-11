@@ -47,7 +47,8 @@ public class SelectPlaces : MonoBehaviour
     private async UniTask<bool> StartGame(IReadOnlyList<Toggle> toggles, bool status)
     {
         //どれかがTrueになってないとだめなので
-        if (toggles.Any(x => x.isOn))
+        var anyPlace = toggles.Any(x => x.isOn);
+        if (anyPlace || status)
         {
             //選択されている場所だけのリストを作成
             Assert.AreEqual(toggles.Count, Places.Length);

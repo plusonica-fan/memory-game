@@ -48,13 +48,25 @@ public class CardManager : MonoBehaviour
 
     private void CreateCard(IReadOnlyCollection<string> places, bool status)
     {
-        var addMember = Storage.MemberIcons.Where(x => places.Any(y => y == x.member.belongs)).ToList();
-        
-        //卒業メンバーを含めないなら
-        if (status == false)
+        var addMember = new List<MemberIcon>();
+        //選択してる場所が0より大きいか
+        if (places.Count > 0)
         {
+            //0より大きいので、指定の場所からメンバーを選ぶ
+            addMember = Storage.MemberIcons.Where(x => places.Any(y => y == x.member.belongs)).ToList();
+        
+            //卒業メンバーを含めないなら
+            if (status == false)
+            {
+                //卒業してないメンバーだけを選ぶ
+                addMember = addMember.Where(x => x.member.status).ToList();
+            }
+        }
+        else if(status)
+        {
+            //場所が0で卒業メンバーを含めるなら、
             //卒業してないメンバーだけを選ぶ
-            addMember = addMember.Where(x => x.member.status).ToList();
+            addMember = Storage.MemberIcons.Where(x => x.member.status == false).ToList();
         }
 
         _cardAmount = addMember.Count;
