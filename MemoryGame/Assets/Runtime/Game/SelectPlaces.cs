@@ -11,6 +11,7 @@ public class SelectPlaces : MonoBehaviour
     private static bool _isCompleteDownloadDetails;
 
     private static readonly string[] Places = {"東京", "名古屋", "大阪", "札幌"};
+    private static readonly string[] Icon = {"youtube_img", "twitter_main_img"};
 
     public Action<List<string>, bool> onGameStart;
 
@@ -91,11 +92,15 @@ public class SelectPlaces : MonoBehaviour
         {
             Storage.MemberIcons = new List<MemberIcon>();
         }
+
+        var iconDropdown = GameObject.Find("IconSelect").GetComponent<Dropdown>();
+        var icon = Icon[iconDropdown.value];
+        
         var text = await WebHelper.GetText(DataUrl.MemberProfile);
         var json = JsonNode.Parse(text);
         foreach (var member in json)
         {
-            var iconImgUrl = member["youtube_img"].Get<string>();
+            var iconImgUrl = member[icon].Get<string>();
             if (string.IsNullOrEmpty(iconImgUrl) || string.IsNullOrWhiteSpace(iconImgUrl))
             {
                 iconImgUrl = DataUrl.DefaultIcon;
