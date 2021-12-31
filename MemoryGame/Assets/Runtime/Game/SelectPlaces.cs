@@ -10,10 +10,10 @@ public class SelectPlaces : MonoBehaviour
 {
     private static bool _isCompleteDownloadDetails;
 
-    private static readonly string[] Places = {"東京", "名古屋", "大阪", "札幌"};
-    private static readonly string[] Icon = {"youtube_img", "twitter_main_img"};
+    private static readonly string[] Places = { "東京", "名古屋", "大阪", "札幌" };
+    private static readonly string[] Icon = { "youtube_img", "twitter_main_img" };
 
-    public Action<List<string>, bool> onGameStart;
+    public Action<List<string>, bool, int> onGameStart;
 
     private void Start()
     {
@@ -30,9 +30,9 @@ public class SelectPlaces : MonoBehaviour
         }
 
         //始めるボタン
-        var startButton =  GameObject.Find("StartButton").GetComponent<Button>();
+        var startButton = GameObject.Find("StartButton").GetComponent<Button>();
         startButton.onClick.AddListener(TryStart);
-        
+
         async void TryStart()
         {
             startButton.interactable = false;
@@ -70,12 +70,15 @@ public class SelectPlaces : MonoBehaviour
             }
 
             await UniTask.WaitUntil(() => _isCompleteDownloadDetails);
-        
+
+            
+            var iconDropdown = GameObject.Find("IconSelect").GetComponent<Dropdown>();
+            onGameStart?.Invoke(places, status, iconDropdown.value);
+            
             GameObject.Find("SelectCanvas").SetActive(false);
-            onGameStart?.Invoke(places, status);
             return true;
         }
-        
+
         Debug.LogError("Failed");
         return false;
     }
@@ -93,24 +96,31 @@ public class SelectPlaces : MonoBehaviour
             Storage.MemberIcons = new List<MemberIcon>();
         }
 
-        var iconDropdown = GameObject.Find("IconSelect").GetComponent<Dropdown>();
-        var icon = Icon[iconDropdown.value];
-        
         var text = await WebHelper.GetText(DataUrl.MemberProfile);
         var json = JsonNode.Parse(text);
+
+        var textures = new List<Texture2D>();
+
         foreach (var member in json)
         {
-            var iconImgUrl = member[icon].Get<string>();
-            if (string.IsNullOrEmpty(iconImgUrl) || string.IsNullOrWhiteSpace(iconImgUrl))
+            foreach (var icon in Icon)
             {
-                iconImgUrl = DataUrl.DefaultIcon;
-            }
+                var iconImgUrl = member[icon].Get<string>();
+                if (string.IsNullOrEmpty(iconImgUrl) || string.IsNullOrWhiteSpace(iconImgUrl))
+                {
+                    iconImgUrl = DataUrl.DefaultIcon;
+                }
 
-            var texture = await WebHelper.GetTexture(iconImgUrl);
-            if (texture != null)
-            {
-                Storage.MemberIcons.Add(new MemberIcon(new Member(member["display_name"].Get<string>(), member["belongs"].Get<string>(),member["status"].Get<string>() == "現役"),texture));
+                var texture = await WebHelper.GetTexture(iconImgUrl);
+                textures.Add(texture);
             }
+            
+            Storage.MemberIcons.Add(new MemberIcon(
+                new Member(member["display_name"].Get<string>(), member["belongs"].Get<string>(),
+                    member["status"].Get<string>() == "現役"), new List<Texture2D>(textures)));
+            Debug.Log(textures.Count.ToString());
+            
+            textures.Clear();
         }
 
         _isCompleteDownloadDetails = true;

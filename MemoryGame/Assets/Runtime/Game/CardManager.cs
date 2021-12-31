@@ -46,8 +46,10 @@ public class CardManager : MonoBehaviour
 
     #region カード作成
 
-    private void CreateCard(IReadOnlyCollection<string> places, bool status)
+    private void CreateCard(IReadOnlyCollection<string> places, bool status, int target)
     {
+        target = Mathf.Max(0, target);
+        
         var addMember = new List<MemberIcon>();
         //選択してる場所が0より大きいか
         if (places.Count > 0)
@@ -91,7 +93,7 @@ public class CardManager : MonoBehaviour
                 cardObj.transform.GetChild(0)
                     .GetChild(0)
                     .GetComponent<MeshRenderer>()
-                    .material.SetTexture(MainTex, icon.texture);
+                    .material.SetTexture(MainTex, icon.textures[target]);
                 cardObj.transform.GetChild(0).GetChild(3).GetComponent<TextMesh>().text = card.member.name;
 
                 cardObj.transform.localPosition = GetPosition(index);

@@ -1,15 +1,16 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
 public struct MemberIcon
 {
     public Member member;
-    public Texture2D texture;
+    public List<Texture2D> textures;
 
-    public MemberIcon(Member member, Texture2D texture)
+    public MemberIcon(Member member, List<Texture2D> textures)
     {
         this.member = member;
-        this.texture = texture;
+        this.textures = textures;
     }
 }
