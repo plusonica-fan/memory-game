@@ -10,7 +10,7 @@ public class SelectPlaces : MonoBehaviour
 {
     private static bool _isCompleteDownloadDetails;
 
-    private static readonly string[] Places = { "東京", "名古屋", "大阪", "札幌" };
+    private static readonly string[] Places = { "東京", "名古屋", "大阪", "札幌", "福岡" };
     private static readonly string[] Icon = { "youtube_img", "twitter_main_img" };
 
     public Action<List<string>, bool, int> onGameStart;
@@ -112,6 +112,13 @@ public class SelectPlaces : MonoBehaviour
                 }
 
                 var texture = await WebHelper.GetTexture(iconImgUrl);
+
+                //TextureがNullならデフォルトのテクスチャを取得する
+                if (texture == null)
+                {
+                    texture = await WebHelper.GetTexture(DataUrl.DefaultIcon);
+                }
+                
                 textures.Add(texture);
             }
             
